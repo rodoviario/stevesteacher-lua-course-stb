@@ -1,10 +1,12 @@
+-- https://youtu.be/I549C6SmUnk?t=14079
 local love = require "love"
+local enemy = require "Enemy"
 
 local game = {
   state = {
-    menu = true,
+    menu = false,
     paused = false,
-    running = false,
+    running = true,
     ended = false
   }
 }
@@ -15,13 +17,21 @@ local player = {
   y = 30
 }
 
+local enemies = {}
+
 function love.load()
   love.window.setTitle("Save the ball")
   love.mouse.setVisible(false)
+
+  table.insert(enemies, 1, enemy())
 end
 
 function love.update()
   player.x, player.y = love.mouse.getPosition()
+
+  for i=1, #enemies do
+    enemies[i]:move(player.x, player.y)
+  end
 end
 
 function love.draw()
@@ -33,6 +43,10 @@ function love.draw()
     love.graphics.getWidth()
   )
   if game.state["running"] then
+    for i=1, #enemies do
+      enemies[i]:draw()
+    end
+
     love.graphics.circle("fill", player.x, player.y, player.radius)
   end
 
