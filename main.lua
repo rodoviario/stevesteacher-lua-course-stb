@@ -1,4 +1,4 @@
--- https://youtu.be/I549C6SmUnk?t=14079
+-- https://youtu.be/I549C6SmUnk?t=17375
 local love = require "love"
 local enemy = require "Enemy"
 local button = require "Button"
@@ -26,13 +26,9 @@ local buttons = {
 
 local enemies = {}
 
-function love.load()
-  love.window.setTitle("Save the ball")
-  love.mouse.setVisible(false)
-
-  buttons.menu_state.play_game = button("Play Game", nil, nil, 120, 40)
-  buttons.menu_state.settings = button("Settings", nil, nil, 120, 40)
-  buttons.menu_state.exit_game = button("Exit Game", love.event.quit, nil, 120, 40)
+local function startNewGame()
+  game.state["menu"] = false
+  game.state["running"] = true
 
   table.insert(enemies, 1, enemy())
 end
@@ -49,12 +45,27 @@ function love.mousepressed(x, y, button, istouch, presses)
   end
 end
 
+function love.load()
+  love.window.setTitle("Save the ball")
+  love.mouse.setVisible(false)
+
+  buttons.menu_state.play_game = button("Play Game", startNewGame, nil, 120, 40)
+  buttons.menu_state.settings = button("Settings", nil, nil, 120, 40)
+  buttons.menu_state.exit_game = button("Exit Game", love.event.quit, nil, 120, 40)
+
+  table.insert(enemies, 1, enemy())
+end
+
+
 function love.update()
   player.x, player.y = love.mouse.getPosition()
 
-  for i=1, #enemies do
-    enemies[i]:move(player.x, player.y)
+  if game.state["running"] then
+    for i=1, #enemies do
+      enemies[i]:move(player.x, player.y)
+    end
   end
+
 end
 
 function love.draw()
