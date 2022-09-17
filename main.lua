@@ -2,6 +2,8 @@
 local love = require "love"
 local enemy = require "Enemy"
 
+math.randomseed(os.time())
+
 local game = {
   state = {
     menu = false,
