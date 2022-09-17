@@ -1,14 +1,15 @@
 -- https://youtu.be/I549C6SmUnk?t=14079
 local love = require "love"
 local enemy = require "Enemy"
+local button = require "Button"
 
 math.randomseed(os.time())
 
 local game = {
   state = {
-    menu = false,
+    menu = true,
     paused = false,
-    running = true,
+    running = false,
     ended = false
   }
 }
@@ -19,11 +20,17 @@ local player = {
   y = 30
 }
 
+local buttons = {
+  menu_state = {}
+}
+
 local enemies = {}
 
 function love.load()
   love.window.setTitle("Save the ball")
   love.mouse.setVisible(false)
+
+  buttons.menu_state.play_game = button("Play Game", nil, nil, 120, 40)
 
   table.insert(enemies, 1, enemy())
 end
@@ -50,6 +57,8 @@ function love.draw()
     end
 
     love.graphics.circle("fill", player.x, player.y, player.radius)
+  elseif game.state["menu"] then
+    buttons.menu_state.play_game:draw(10, 20, 10, 20)
   end
 
   if not game.state["running"] then
