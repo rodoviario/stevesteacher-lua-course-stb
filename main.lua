@@ -37,6 +37,18 @@ function love.load()
   table.insert(enemies, 1, enemy())
 end
 
+function love.mousepressed(x, y, button, istouch, presses)
+  if not game.state["running"] then
+    if button == 1 then
+      if game.state ["menu"] then
+        for index in pairs(buttons.menu_state) do
+          buttons.menu_state[index]:checkPressed(x, y, player.radius)
+        end
+      end
+    end
+  end
+end
+
 function love.update()
   player.x, player.y = love.mouse.getPosition()
 
