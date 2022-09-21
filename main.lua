@@ -1,4 +1,3 @@
--- https://youtu.be/I549C6SmUnk?t=17375
 local love = require "love"
 local enemy = require "Enemy"
 local button = require "Button"
@@ -6,13 +5,13 @@ local button = require "Button"
 math.randomseed(os.time())
 
 local game = {
+  difficulty = 1,
   state = {
     menu = true,
     paused = false,
     running = false,
     ended = false
   },
-  difficulty = 1,
   points = 0,
   levels = {15, 30, 60, 120}
 }
@@ -57,13 +56,15 @@ local function startNewGame()
 
   game.points = 0
 
-  enemies = { enemy(1) }
+  enemies = {
+    enemy(1)
+  }
 end
 
 function love.mousepressed(x, y, button, istouch, presses)
   if not game.state["running"] then
     if button == 1 then
-      if game.state ["menu"] then
+      if game.state["menu"] then
         for index in pairs(buttons.menu_state) do
           buttons.menu_state[index]:checkPressed(x, y, player.radius)
         end
@@ -97,11 +98,9 @@ function love.update(dt)
     for i=1, #enemies do
       if not enemies[i]:checkTouched(player.x, player.y, player.radius) then
         enemies[i]:move(player.x, player.y)
-        
         for i = 1, #game.levels do
           if math.floor(game.points) == game.levels[i] then
             table.insert(enemies, 1, enemy(game.difficulty * (i + 1)))
-
             game.points = game.points + 1
           end
         end
