@@ -17,6 +17,21 @@ local game = {
   levels = {15, 30, 60, 120}
 }
 
+local fonts = {
+  medium = {
+    font = love.graphics.newFont(16),
+    size = 16
+  },
+  large = {
+    font = love.graphics.newFont(24),
+    size = 24
+  },
+  massive = {
+    font = love.graphics.newFont(60),
+    size = 60
+  },
+}
+
 local player = {
   radius = 20,
   x = 30,
@@ -94,15 +109,16 @@ function love.update(dt)
 end
 
 function love.draw()
+  love.graphics.setFont(fonts.medium.font)
   love.graphics.printf(
     "FPS: " .. love.timer.getFPS(),
-    love.graphics.newFont(16),
+    fonts.medium.font,
     10,
     love.graphics.getHeight() - 30,
     love.graphics.getWidth()
   )
   if game.state["running"] then
-    love.graphics.printf(math.floor(game.points), love.graphics.newFont(24), 0, 10, love.graphics.getWidth(), "center")
+    love.graphics.printf(math.floor(game.points), fonts.large.font, 0, 10, love.graphics.getWidth(), "center")
 
     for i=1, #enemies do
       enemies[i]:draw()
