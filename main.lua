@@ -12,6 +12,7 @@ local game = {
     running = false,
     ended = false
   },
+  difficulty = 1,
   points = 0,
   levels = {15, 30, 60, 120}
 }
@@ -72,7 +73,20 @@ function love.update(dt)
 
   if game.state["running"] then
     for i=1, #enemies do
-      enemies[i]:move(player.x, player.y)
+      if not enemies[i]:checkTouched(player.x, player.y, player.radius) then
+        enemies[i]:move(player.x, player.y)
+        
+        for i = 1, #game.levels do
+          if math.floor(game.points) == game.levels[i] then
+            table.insert(enemies, 1, enemy(game.difficulty * (i + 1)))
+
+            game.points = game.points + 1
+          end
+        end
+      else
+        changeGameState("menu")
+      end
+
     end
     game.points = game.points + dt --one point per second
   end
